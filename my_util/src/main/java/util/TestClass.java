@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public class TestClass {
     public static void main(String[] args) throws IOException {
+        System.out.println("         ");
         Map<Integer, String> map = new HashMap<Integer, String>();
         for (int i = 0; i < 40; i++) {
             map.put(i, "test");
