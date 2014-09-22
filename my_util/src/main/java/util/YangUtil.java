@@ -1,5 +1,6 @@
 package util;
 
+import org.omg.CORBA.PERSIST_STORE;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -314,4 +315,20 @@ public class YangUtil {
         cs[0] -= 32;
         return String.valueOf(cs);
     }
+
+    public static <K,G> Map<G, Collection<K>> groupBySelf(Collection<K> ks, GroupInterface<G,K> kf) {
+        Map<G, Collection<K>> map = new HashMap<>();
+        for (K k : ks) {
+            G o = kf.generateGroup(k);
+            Collection<K> ks1 = map.get(o);
+            if(ks1 == null) {
+                ks1 = new HashSet<>();
+                map.put(o, ks1);
+            }
+            ks1.add(k);
+        }
+        return map;
+    }
+
+
 }
