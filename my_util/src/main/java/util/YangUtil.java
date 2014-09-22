@@ -269,6 +269,7 @@ public class YangUtil {
             try{
                 b = processor.processLine(line);
             }catch (Exception e){
+                e.printStackTrace();
                 continue;
             }
             if(!b){
@@ -321,7 +322,7 @@ public class YangUtil {
             G g = kf.generateGroup(k);
             Collection<K> list = map.get(g);
             if(list == null) {
-                list = new HashSet<>();
+                list = new ArrayList<>();
                 map.put(g, list);
             }
             list.add(k);
@@ -329,5 +330,26 @@ public class YangUtil {
         return map;
     }
 
+    public static <K,V> Map<K, Collection<V>> sortByValueSize(Map<K, Collection<V>> map, boolean asc) {
+        if (!(map instanceof LinkedHashMap)) {
+            map = new LinkedHashMap<>(map);
+        }
+        List<Map.Entry<K, Collection<V>>> entries = new ArrayList<>(map.entrySet());
+        Collections.sort(entries, new Comparator<Map.Entry<K, Collection<V>>>() {
+            @Override
+            public int compare(Map.Entry<K, Collection<V>> o1, Map.Entry<K, Collection<V>> o2) {
+                if(asc){
+                    return o2.getValue().size() - o1.getValue().size();
+                }else {
+                    return o1.getValue().size() - o2.getValue().size();
+                }
+            }
+        });
+        map.clear();
+        for (Map.Entry<K, Collection<V>> entry : entries) {
+            map.put(entry.getKey(), entry.getValue());
+        }
+        return map;
+    }
 
 }
