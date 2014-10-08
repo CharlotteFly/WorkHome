@@ -61,12 +61,15 @@ public class YangUtil {
         assert map instanceof LinkedHashMap;
         ArrayList<Map.Entry<K, V>> entryList = new ArrayList<>(map.entrySet());
         map.clear();
-        Collections.sort(entryList, (o1, o2) -> {
-            double i = o2.getValue().doubleValue() * 1000 - o1.getValue().doubleValue() * 1000;
-            if(!order) {
-                i = i * -1;
+        Collections.sort(entryList, new Comparator<Map.Entry<K, V>>() {
+            @Override
+            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+                double i = o2.getValue().doubleValue() * 1000 - o1.getValue().doubleValue() * 1000;
+                if (!order) {
+                    i = i * -1;
+                }
+                return i > 0 ? 1 : (i < 0 ? -1 : 0);
             }
-            return i > 0 ? 1 : (i < 0 ? -1 : 0);
         });
         for (Map.Entry<K, V> entry : entryList) {
             map.put(entry.getKey(), entry.getValue());
@@ -284,10 +287,13 @@ public class YangUtil {
     }
 
     public static Collection<String> preparationFile2Lib(InputStream in) throws IOException {
-        Collection<String> lib = new HashSet<>();
-        readFile(in, line -> {
-            lib.add(line);
-            return true;
+        final Collection<String> lib = new HashSet<>();
+        readFile(in, new LineProcessor() {
+            @Override
+            public boolean processLine(String line) throws IOException {
+                lib.add(line);
+                return true;
+            }
         });
         return lib;
     }
@@ -330,7 +336,7 @@ public class YangUtil {
         return map;
     }
 
-    public static <K,V> Map<K, Collection<V>> sortByValueSize(Map<K, Collection<V>> map, boolean asc) {
+    public static <K,V> Map<K, Collection<V>> sortByValueSize(Map<K, Collection<V>> map, final boolean asc) {
         if (!(map instanceof LinkedHashMap)) {
             map = new LinkedHashMap<>(map);
         }

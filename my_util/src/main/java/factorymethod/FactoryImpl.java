@@ -41,9 +41,10 @@ public class FactoryImpl implements Factory {
         return newInstance(abstractClass, DEFAULT_NAME, params);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Factory config(Class<?> abstractClass, Class<?> implClass, String name) {
-        registry.put(new SimpleEntry<>(abstractClass, name), implClass);
+        registry.put((SimpleEntry<Class<?>, String>) new SimpleEntry<>(abstractClass, name), implClass);
         return this;
     }
 

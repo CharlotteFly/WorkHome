@@ -42,6 +42,11 @@ public class FileReadHelper implements Iterator<String>,Iterable<String>,Closeab
     }
 
     @Override
+    public void remove() {
+
+    }
+
+    @Override
     public void close() throws IOException {
         this.reader.close();
     }

@@ -13,8 +13,9 @@ public class Factories {
     private static final Map<AbstractMap.SimpleEntry<Class<?>, String>, Class<?>> register = new HashMap<>();
 
 
+    @SuppressWarnings("unchecked")
     public void config(Class<?> productType, String name, Class<? extends Factory> factoryType) {
-        register.put(new AbstractMap.SimpleEntry<>(productType, name), factoryType);
+        register.put((AbstractMap.SimpleEntry<Class<?>, String>) new AbstractMap.SimpleEntry<>(productType, name), factoryType);
     }
 
     public static Factory newFactory(Class<?> productType, String name) throws IllegalAccessException, InstantiationException {
