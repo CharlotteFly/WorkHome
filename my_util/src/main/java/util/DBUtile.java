@@ -54,6 +54,34 @@ public class DBUtile {
         }
     }
 
+    public static List<Map<String, Object>> executeQueryByPage(String sql, int start, int size) {
+        sql = sql + String.format(" limit %d,%d", start, size);
+        System.out.println("excute sql : " + sql);
+        try {
+            Connection conn = DBUtile.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet set = st.executeQuery(sql);
+            ResultSetMetaData metaData = set.getMetaData();
+            List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+            int columnCount = metaData.getColumnCount();
+            while (set.next()) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                for (int i = 1; i <= columnCount; i++) {
+                    String name = metaData.getColumnName(i);
+                    Object value = set.getObject(name);
+                    map.put(name, value);
+                }
+                result.add(map);
+            }
+            set.close();
+            st.close();
+            conn.close();
+            return result;
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
     public static long selectCount(String tableName){
         String sql = "select count(*) from " + tableName;
         List<Map<String, Object>> result = executeQuery(sql);
