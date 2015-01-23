@@ -51,7 +51,28 @@ public class DBUtile {
             return result;
         } catch (SQLException e) {
             throw new IllegalArgumentException(e);
+        } finally {
+
         }
+    }
+
+    public static List<Map<String, Object>> executeQueryAutoByPage(String sql, int pageSize) {
+        int total = executeCountQuery(sql);
+        int pageCount = total / pageSize + 1;
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (int i = 0; i < pageCount; i++) {
+            List<Map<String, Object>> maps = executeQueryByPage(sql, pageSize * i, pageSize);
+            result.addAll(maps);
+        }
+        return result;
+    }
+
+
+    public static int executeCountQuery(String sql) {
+        String countSql = String.format("select count(*) from (%s) t", sql);
+        List<Map<String, Object>> maps = executeQuery(countSql);
+        Object o = maps.get(0).get("count(*)");
+        return ((Number) o).intValue();
     }
 
     public static List<Map<String, Object>> executeQueryByPage(String sql, int start, int size) {

@@ -18,7 +18,6 @@ import java.util.Map;
 public class FileUtil {
     /**
      * 根据时间戳找到最新文件
-     *
      * @param filePath 文件名，可以路径
      * @return 最新的文件
      */
@@ -39,12 +38,11 @@ public class FileUtil {
             map.put(fileNameStr, Integer.parseInt(getTimestamp(fileNameStr)));
         }
         YangUtil.sortMapByValue(map, true);
-        return new ArrayList<>(map.entrySet()).get(0).getKey();
+        return file.getParentFile().getPath() + "\\" + new ArrayList<>(map.entrySet()).get(0).getKey();
     }
 
     /**
      * 得到这个文件的时间戳
-     *
      * @param fileName 文件名
      * @return 文件名中的时间戳
      */
@@ -55,17 +53,19 @@ public class FileUtil {
 
     /**
      * 去掉时间戳
-     *
      * @param fileName 文件名
      * @return 去掉时间戳的文件名
      */
     public static String removeTimestamp(String fileName) {
-        return String.format("%s.%s", getFileTitle(fileName), getSuffix(fileName));
+        if (fileName.contains("." + getTimestamp(fileName))) {
+            return fileName.replace("." + getTimestamp(fileName), "");
+        }
+        return fileName;
+//        return String.format("%s.%s", getFileTitle(fileName), getSuffix(fileName));
     }
 
     /**
      * 得到文件的title
-     *
      * @param fileName 文件名
      * @return 文件的title
      */
@@ -75,18 +75,19 @@ public class FileUtil {
 
     /**
      * 去除文件的后缀
-     *
      * @param fileName 文件名
      * @return 去后缀的文件名
      */
     public static String removeSuffix(String fileName) {
         int lastDian = fileName.lastIndexOf(".");
-        return fileName.substring(0, lastDian);
+        if (lastDian > 0) {
+            return fileName.substring(0, lastDian);
+        }
+        return fileName;
     }
 
     /**
      * 得到文件的后缀
-     *
      * @param fileName 文件名
      * @return 后缀
      */
@@ -97,7 +98,6 @@ public class FileUtil {
 
     /**
      * 给文件一个时间戳
-     *
      * @param filePath 文件名，可以路径
      * @return 加入时间戳的文件名
      */
@@ -110,7 +110,6 @@ public class FileUtil {
 
     /**
      * 当前时间的时间缀
-     *
      * @return 时间缀
      */
     public static String getCurrentTimestamp() {

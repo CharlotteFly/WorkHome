@@ -3,13 +3,24 @@ package util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashSet;
+import java.util.HashMap;
 
 /**
- * Created by hwyang on 2014/12/1.
+ * Created by hwyang on 2015/1/23.
  */
-public class WordDic extends HashSet<String> {
-    public WordDic(Reader in) {
+public abstract class BaseMapDic<K, V> extends HashMap<K, V> {
+
+    private String split = "\\t";
+
+    public String getSplit() {
+        return split;
+    }
+
+    public void setSplit(String split) {
+        this.split = split;
+    }
+
+    public BaseMapDic(Reader in) {
         super();
         try {
             init(in);
@@ -20,7 +31,7 @@ public class WordDic extends HashSet<String> {
 
     private LineHandler handler;
 
-    public WordDic(Reader in, LineHandler handler) {
+    public BaseMapDic(Reader in, LineHandler handler) {
         super();
         this.handler = handler;
         try {
@@ -37,8 +48,12 @@ public class WordDic extends HashSet<String> {
             if (this.handler != null) {
                 line = handler.doHandler(line);
             }
-            add(line);
+            String[] mavValue = line.split(split);
+            put(setKey(mavValue[0]), setValue(mavValue[1]));
         }
     }
 
+    public abstract K setKey(String key);
+
+    public abstract V setValue(String value);
 }

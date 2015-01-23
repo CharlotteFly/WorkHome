@@ -282,8 +282,18 @@ public class YangUtil {
     }
 
     public static Pattern chinesePattern = Pattern.compile("[\\u4E00-\\u9FA5]+");
+
     public static boolean isChinese(String line){
         return chinesePattern.matcher(line).find();
+    }
+
+    public static boolean isChineseByCharacter(String line) {
+        for (char c : line.toCharArray()) {
+            if (Character.isLetter(c) && !Character.isLowerCase(c) && !Character.isUpperCase(c)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static Collection<String> preparationFile2Lib(InputStream in) throws IOException {
