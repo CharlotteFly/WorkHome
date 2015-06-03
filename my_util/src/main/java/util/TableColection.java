@@ -1,28 +1,16 @@
 package util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 
-public class Table<R,C,V extends Object> {
+public class TableColection<R, C, V extends Object> {
 
     private Object[][] value;
     private ArrayList<R> rows;
     private ArrayList<C> cols;
 
-    public Table(final Map<R, Map<C, V>> map) {
-        this.rows = new ArrayList<R>(map.keySet());
-        Set<C> set = new HashSet<C>();
-        for (Map<C, V> values : map.values()) {
-            for (C c : values.keySet()) {
-                set.add(c);
-            }
-        }
-        this.cols = new ArrayList<C>(set);
-        value = new Object[this.rows.size()][this.cols.size()];
-        for (int row = 0; row < rows.size(); row++) {
-            for (int col = 0; col < cols.size(); col++) {
-                value[row][col] = map.get(rows.get(row)).get(cols.get(col));
-            }
-        }
+    public TableColection() {
     }
 
     public Collection<V> getRow(R row) {
@@ -49,5 +37,8 @@ public class Table<R,C,V extends Object> {
         return (V) value[rowIndex][colIndex];
     }
 
+//    public V put(R row, C col, Object o) {
+//        return (V) value[rowIndex][colIndex];
+//    }
 
 }

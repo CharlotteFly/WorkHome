@@ -1,5 +1,6 @@
 package util;
 
+import com.google.gson.Gson;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -230,26 +231,6 @@ public class YangUtil {
         return temp;
     }
 
-    public static Logger getSimpleFileLogger(String loggerName,String filePath) {
-        Logger logger = Logger.getLogger(loggerName);
-        try {
-            Handler handler = new FileHandler(filePath);
-            Formatter formatter = new Formatter() {
-                @Override
-                public String format(LogRecord record) {
-                    return record.getMessage() + "\r\n";
-                }
-            };
-            handler.setLevel(Level.ALL);
-            handler.setFormatter(formatter);
-            logger.addHandler(handler);
-            logger.setUseParentHandlers(false);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return logger;
-    }
-
     public static <C> String generateString(Collection<C> coll,LineGenerator lineGenerator) {
         StringBuilder builder = null;
         for (C c : coll) {
@@ -366,6 +347,41 @@ public class YangUtil {
             map.put(entry.getKey(), entry.getValue());
         }
         return map;
+    }
+
+    static Gson gson = new Gson();
+
+    public static <K> List<K> readFileLineAsGson(File file, final Class<K> clazz) throws IOException {
+        final List<K> list = new ArrayList<>();
+        readFile(file, new LineProcessor() {
+            @Override
+            public boolean processLine(String line) throws IOException {
+                K k = gson.fromJson(line, clazz);
+                list.add(k);
+                return true;
+            }
+        });
+        return list;
+    }
+
+    public static Logger getSimpleFileLogger(String clazz, String file) {
+        Logger logger = Logger.getLogger(clazz);
+        try {
+            Handler handler = new FileHandler(file);
+            Formatter formatter = new Formatter() {
+                @Override
+                public String format(LogRecord record) {
+                    return record.getMessage() + "\r\n";
+                }
+            };
+            handler.setLevel(Level.ALL);
+            handler.setFormatter(formatter);
+            logger.addHandler(handler);
+            logger.setUseParentHandlers(false);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return logger;
     }
 
 }

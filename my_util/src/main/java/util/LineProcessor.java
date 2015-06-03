@@ -3,6 +3,7 @@ package util;
 import java.io.IOException;
 
 /**
+ *
  * Created by hwyang on 2014/8/7.
  */
 public interface LineProcessor {

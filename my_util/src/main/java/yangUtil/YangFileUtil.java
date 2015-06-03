@@ -1,4 +1,4 @@
-package file;
+package yangUtil;
 
 import util.YangUtil;
 
@@ -15,7 +15,7 @@ import java.util.Map;
  * 文件处理工具类
  * Created by hwyang on 2014/12/17.
  */
-public class FileUtil {
+public class YangFileUtil {
     /**
      * 根据时间戳找到最新文件
      * @param filePath 文件名，可以路径
@@ -116,9 +116,38 @@ public class FileUtil {
         return dateFormat.format(new Date());
     }
 
+    /**
+     * 得到这个文件的log文件名
+     *
+     * @param filePath
+     * @return
+     */
+    public static String getFileLogFileName(String filePath) {
+        filePath = removeSuffix(filePath);
+        return filePath + ".log";
+    }
+
+    /**
+     * 给文件在后缀前添加名
+     *
+     * @param filePath
+     * @return
+     */
+    public static String addFileNameAtLast(String filePath, String name) {
+        String s = removeSuffix(filePath);
+        String suffix = getSuffix(filePath);
+        return s + "." + name + "." + suffix;
+    }
+
+    public static String getFileName(String baseDir, String fileName) {
+        File file = new File(baseDir);
+        return file.getAbsolutePath() + "\\" + fileName;
+    }
     public static void main(String[] args) {
-        String lastFile = getLastFile("F:\\test\\test.txt");
+        String lastFile = getFileName("F:\\test\\", "test.txt");
         System.out.println(lastFile);
     }
+
+
 
 }

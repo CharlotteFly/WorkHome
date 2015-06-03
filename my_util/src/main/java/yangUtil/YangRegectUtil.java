@@ -7,12 +7,12 @@ import java.lang.reflect.InvocationTargetException;
  * 反射工具类
  * Created by hwyang on 2015/1/6.
  */
-public class RegectYangUtil {
+public class YangRegectUtil {
     public static <R> R getPrivateVariable(Object instance, String fieldName, Class<R> clzz) {
         Field field = null;
         R r;
         try {
-            field = instance.getClass().getField(fieldName);
+            field = instance.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
             r = clzz.cast(field.get(instance));
         } catch (Exception e) {

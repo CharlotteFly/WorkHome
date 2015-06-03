@@ -1,5 +1,7 @@
 package util;
 
+import handler.VoidHandler;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,8 +20,10 @@ public class DBUtile {
     public static String password = "Blue_Red222";
     public static Connection getConnection() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            String url = "jdbc:mysql://" + URL + "/"+dbName+"?useUnicode=true&characterEncoding=utf-8";
+//            Class.forName("com.mysql.jdbc.Driver");
+//            String url = "jdbc:mysql://" + URL + "/"+dbName+"?useUnicode=true&characterEncoding=utf-8";
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://" + URL + ";DatabaseName=" + dbName;
             Connection conn = DriverManager.getConnection(url, username, password);
             return conn;
         } catch (Exception e) {
@@ -110,14 +114,14 @@ public class DBUtile {
         return number.longValue();
     }
 
-    public static void readAll(String tableName,int offset,DbRowProcessor processor) {
+    public static void readAll(String tableName, int offset, VoidHandler<Map<String, Object>> processor) throws Exception {
         long total = selectCount(tableName);
         int count = (int) (total / offset) + 1;
         for (int i = 0; i < count; i++) {
             String sql = "select * from " + tableName + " limit " + i * offset + "," + offset;
             List<Map<String, Object>> maps = executeQuery(sql);
             for (Map<String, Object> map : maps) {
-                processor.doProcess(map);
+                processor.doHandler(map);
             }
             System.out.println("read " + i + " : " + count);
         }

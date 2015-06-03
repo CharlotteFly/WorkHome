@@ -10,24 +10,24 @@ import java.util.Map;
 /**
  * Created by hwyang on 2014/12/1.
  */
-public class MoreLineDataer extends BufferedReader implements Iterator<Map<String, String>>, Iterable<Map<String, String>> {
+public class MoreLineReader extends BufferedReader implements Iterator<Map<String, String>>, Iterable<Map<String, String>> {
     private String[] lines;
     private Map<String, String> resultUnit;
 
-    private MoreLineDataer(Reader in, int sz) {
+    private MoreLineReader(Reader in, int sz) {
         super(in, sz);
     }
 
-    private MoreLineDataer(Reader in) {
+    private MoreLineReader(Reader in) {
         super(in);
     }
 
-    public MoreLineDataer(Reader in, int sz, String... lines) {
+    public MoreLineReader(Reader in, int sz, String... lines) {
         this(in, sz);
         this.lines = lines;
     }
 
-    public MoreLineDataer(Reader in, String... lines) {
+    public MoreLineReader(Reader in, String... lines) {
         this(in);
         this.lines = lines;
     }

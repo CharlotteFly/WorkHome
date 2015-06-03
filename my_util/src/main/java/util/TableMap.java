@@ -1,47 +1,58 @@
 package util;
 
+import yangUtil.YangCollectionUtil;
+
 import java.util.*;
 
 /**
  * Created by hwyang on 2014/11/11.
  */
-public class TableMap<K, V> implements Iterator<AbstractMap.SimpleEntry>,Iterable<AbstractMap.SimpleEntry>{
-    private Map<K, List<V>> map;
+public class TableMap<R, C, V> {
+    private Map<R, List<V>> rowMap = new HashMap<>();
+    private Map<C, List<V>> colMap = new HashMap<>();
 
-    public TableMap() {
-        map = new HashMap<>();
+    public List<R> getRows() {
+        return new ArrayList<>(rowMap.keySet());
     }
 
-    public void put(K key, V value) {
-        List<V> vs = map.get(key);
-        if (vs == null) {
-            vs = new ArrayList<>();
-            map.put(key, vs);
+    public List<C> getCols() {
+        return new ArrayList<>(colMap.keySet());
+    }
+
+    public List<V> getValues(R row, C col) {
+        List<V> rvs = rowMap.get(row);
+        List<V> cvs = colMap.get(col);
+        if (rvs == null && cvs == null) {
+            return Collections.EMPTY_LIST;
         }
-        vs.add(value);
+        List<V> vs = YangCollectionUtil.collectionRetainAll(rvs, cvs);
+        if (vs == null || vs.isEmpty()) {
+            return Collections.EMPTY_LIST;
+        }
+
+        return vs;
     }
 
-    public List<V> get(K key) {
-        return map.get(key);
+    public V getValue(R row, C col) {
+        List<V> values = getValues(row, col);
+        if (values == null || values.isEmpty()) {
+            return null;
+        }
+        assert values.size() == 1;
+        return values.get(0);
     }
 
-    @Override
-    public Iterator<AbstractMap.SimpleEntry> iterator() {
-        return this;
+    public void put(R row, C col, V value) {
+        putToMap(colMap, col, value);
+        putToMap(rowMap, row, value);
     }
 
-    @Override
-    public boolean hasNext() {
-        return false;
-    }
-
-    @Override
-    public AbstractMap.SimpleEntry next() {
-        return null;
-    }
-
-    @Override
-    public void remove() {
-
+    private <K> void putToMap(Map<K, List<V>> map, K key, V value) {
+        List<V> values = map.get(key);
+        if (values == null) {
+            values = new ArrayList<>();
+            map.put(key, values);
+        }
+        values.add(value);
     }
 }
