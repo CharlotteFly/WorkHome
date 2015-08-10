@@ -29,6 +29,15 @@ public abstract class BaseMapDic<K, V> extends HashMap<K, V> {
         }
     }
 
+    public BaseMapDic(Reader in, String split) {
+        super();
+        try {
+            init(in, split);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private LineHandler handler;
 
     public BaseMapDic(Reader in, LineHandler handler) {
@@ -42,13 +51,17 @@ public abstract class BaseMapDic<K, V> extends HashMap<K, V> {
     }
 
     private void init(Reader in) throws IOException {
+        init(in, this.split);
+    }
+
+    private void init(Reader in, String splitSybol) throws IOException {
         BufferedReader reader = new BufferedReader(in);
         String line;
         while ((line = reader.readLine()) != null) {
             if (this.handler != null) {
                 line = handler.doHandler(line);
             }
-            String[] mavValue = line.split(split);
+            String[] mavValue = line.split(splitSybol);
             put(setKey(mavValue[0]), setValue(mavValue[1]));
         }
     }

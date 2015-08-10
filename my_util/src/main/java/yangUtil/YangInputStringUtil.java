@@ -39,11 +39,11 @@ public class YangInputStringUtil {
         readFile(file, lp, -1);
     }
 
-    public static void readFile(InputStreamReader inputStream, BooleanHandler<String> lp) throws IOException {
+    public static void readFile(Reader inputStream, BooleanHandler<String> lp) throws IOException {
         readFile(inputStream, lp, -1);
     }
 
-    public static void readFile(InputStreamReader inputStream, BooleanHandler<String> lp, int ln) throws IOException {
+    public static void readFile(Reader inputStream, BooleanHandler<String> lp, int ln) throws IOException {
 //        BufferedReader reader = new BufferedReader(inputStream);
         BufferedReader reader = new BufferedReader(inputStream);
         String line;
@@ -196,6 +196,21 @@ public class YangInputStringUtil {
         return list;
     }
 
+    public static List<String> readLines(Reader reader) throws IOException {
+        final List<String> lines = new ArrayList<>();
+        try {
+            readFile(reader, new BooleanHandler<String>() {
+                @Override
+                public boolean doHandler(String s) {
+                    lines.add(s);
+                    return true;
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lines;
+    }
     public static List<String> readLines(File file) {
         final List<String> lines = new ArrayList<>();
         try {
@@ -212,11 +227,92 @@ public class YangInputStringUtil {
         return lines;
     }
 
-    public static void writeLines(List<String> lines, PrintWriter printWriter) {
+    public static void writeLines(Collection<String> lines, PrintWriter printWriter) {
         for (String line : lines) {
             printWriter.println(line);
         }
         printWriter.close();
+    }
+
+    public static Iterable<String> readLinesByIterable(Reader reader) {
+        final BufferedReader bufferedReader = new BufferedReader(reader);
+        return new Iterable<String>() {
+            @Override
+            public Iterator<String> iterator() {
+                return new Iterator<String>() {
+                    String line;
+
+                    @Override
+                    public boolean hasNext() {
+                        try {
+                            line = bufferedReader.readLine();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            if (line == null) {
+                                try {
+                                    bufferedReader.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        return line != null;
+                    }
+
+                    @Override
+                    public String next() {
+                        return line;
+                    }
+
+                    @Override
+                    public void remove() {
+                    }
+                };
+            }
+        };
+    }
+
+    public static <T> Iterable<T> readLinesByIterable(FileReader reader, final Class<T> clazz) {
+        final BufferedReader bufferedReader = new BufferedReader(reader);
+        return new Iterable<T>() {
+            @Override
+            public Iterator<T> iterator() {
+                return new Iterator<T>() {
+                    T t;
+
+                    @Override
+                    public boolean hasNext() {
+                        String line = null;
+                        try {
+                            line = bufferedReader.readLine();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (line == null) {
+                            t = null;
+                            try {
+                                bufferedReader.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            t = gson.fromJson(line, clazz);
+                        }
+                        return line != null;
+                    }
+
+                    @Override
+                    public T next() {
+                        return t;
+                    }
+
+                    @Override
+                    public void remove() {
+                    }
+                };
+            }
+        };
     }
 
 }

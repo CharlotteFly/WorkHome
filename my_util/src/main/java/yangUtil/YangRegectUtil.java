@@ -25,6 +25,25 @@ public class YangRegectUtil {
         return r;
     }
 
+    public static Object getFiled(Object instance, String fileName) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Field field;
+        try {
+            field = instance.getClass().getDeclaredField(fileName);
+            Object result;
+            if (field.isAccessible()) {
+                result = field.get(instance);
+            } else {
+                field.setAccessible(true);
+                result = field.get(instance);
+                field.setAccessible(false);
+            }
+            return result;
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static Object getFiledByGetMethod(Object instance, String fileName) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         return instance.getClass().getDeclaredMethod("get" + captureName(fileName), null).invoke(instance, null);
     }

@@ -127,7 +127,7 @@ public class YangCollectionUtil {
     public static <V, R> Map<R, Collection<V>> groupByParameter(Collection<V> coll, String parameter, Class<R> clzz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Map<R, Collection<V>> map = new HashMap<>();
         for (V o : coll) {
-            Object retVal = YangRegectUtil.getFiledByGetMethod(o, parameter);
+            Object retVal = YangRegectUtil.getFiled(o, parameter);
             R group = clzz.cast(retVal);
             Collection<V> objects = map.get(group);
             if (objects == null) {
@@ -170,7 +170,7 @@ public class YangCollectionUtil {
     public static <K, V> Map<K, List<V>> listToMapList(List<V> list, String paramter, Class<K> key) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Map<K, List<V>> map = new HashMap<>();
         for (V v : list) {
-            Object filedByGetMethod = YangRegectUtil.getFiledByGetMethod(v, paramter);
+            Object filedByGetMethod = YangRegectUtil.getFiled(v, paramter);
             K cast = key.cast(filedByGetMethod);
             List<V> vs = map.get(cast);
             if (vs == null) {

@@ -10,6 +10,7 @@ import org.dom4j.io.XMLWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 
 /**
  * Created by hwyang on 2015/2/10.
@@ -23,6 +24,11 @@ public class YangXmlUtil {
     public static Document readDocument(File file) throws DocumentException {
         SAXReader reader = new SAXReader();
         return reader.read(file);
+    }
+
+    public static Document readDocument(Reader reader) throws DocumentException {
+        SAXReader saxReader = new SAXReader();
+        return saxReader.read(reader);
     }
 
     public static Document createDocument() {
@@ -42,5 +48,11 @@ public class YangXmlUtil {
         XMLWriter xmlWriter = new XMLWriter(writer, format);
         xmlWriter.write(doc);
         xmlWriter.close();
+    }
+
+    public static void reformatXmlDoc(String filePath) throws DocumentException, IOException {
+        File file = new File(filePath);
+        Document document = readDocument(file);
+        saveDocument(document, new FileWriter(file));
     }
 }

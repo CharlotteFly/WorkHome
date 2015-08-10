@@ -2,8 +2,7 @@ package yangUtil;
 
 import util.YangUtil;
 
-import java.io.File;
-import java.io.FilenameFilter;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,7 +60,6 @@ public class YangFileUtil {
             return fileName.replace("." + getTimestamp(fileName), "");
         }
         return fileName;
-//        return String.format("%s.%s", getFileTitle(fileName), getSuffix(fileName));
     }
 
     /**
@@ -118,9 +116,6 @@ public class YangFileUtil {
 
     /**
      * 得到这个文件的log文件名
-     *
-     * @param filePath
-     * @return
      */
     public static String getFileLogFileName(String filePath) {
         filePath = removeSuffix(filePath);
@@ -129,9 +124,6 @@ public class YangFileUtil {
 
     /**
      * 给文件在后缀前添加名
-     *
-     * @param filePath
-     * @return
      */
     public static String addFileNameAtLast(String filePath, String name) {
         String s = removeSuffix(filePath);
@@ -143,11 +135,24 @@ public class YangFileUtil {
         File file = new File(baseDir);
         return file.getAbsolutePath() + "\\" + fileName;
     }
+
+    /**
+     * 根据classpath得到Reader默认编码为utf-8
+     *
+     * @param path classpath相对路径
+     * @return Reader
+     */
+    public static Reader getReaderByClassPath(String path) {
+        try {
+            return new InputStreamReader(YangFileUtil.class.getClassLoader().getResourceAsStream(path), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void main(String[] args) {
         String lastFile = getFileName("F:\\test\\", "test.txt");
         System.out.println(lastFile);
     }
-
-
 
 }

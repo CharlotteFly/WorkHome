@@ -1,4 +1,4 @@
-package util;
+package yangUtil;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -7,9 +7,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
+ *
  * Created by hwyang on 2015/1/12.
  */
 public class SimpleExcelWriter {
@@ -26,7 +29,7 @@ public class SimpleExcelWriter {
     public SimpleExcelWriter(String outputPath) {
         this();
         this.outputPath = outputPath;
-        Row row = sheet.createRow(0);
+        sheet.createRow(0);
     }
 
     public SimpleExcelWriter(String outputPath, String... headers) {
@@ -39,38 +42,23 @@ public class SimpleExcelWriter {
         }
     }
 
-    public SimpleExcelWriter(String outputPath, Map<String, Map<String, String>> map) {
-        this();
-        this.outputPath = outputPath;
-        List rowList = new ArrayList();
-        rowList.add("");
-        rowList.addAll(map.keySet());
-        List colList = new ArrayList();
-        colList.add("");
-
-    }
-
-
     public void writeRow(String... cells) {
-//        Row row = sheet.createRow(sheet.getLastRowNum() + 1);
-//        for (int i = 0; i < cells.length; i++) {
-//            Cell cell = row.createCell(i);
-//            cell.setCellValue(cells[i]);
-//        }
         writeRow(Arrays.asList(cells));
     }
 
-    public void writeRow(List<Object> cells) {
+    public void writeRow(List<String> cells) {
         Row row = sheet.createRow(sheet.getLastRowNum() + 1);
         for (int i = 0; i < cells.size(); i++) {
             Cell cell = row.createCell(i);
-            Object o = cells.get(i);
-            cell.setCellValue(generateString(o));
+            cell.setCellValue(cells.get(i));
         }
     }
 
-
     public void writeRow(Object... cells) {
+        int lastRowNum = sheet.getLastRowNum();
+        if (lastRowNum > 10000) {
+            return;
+        }
         Row row = sheet.createRow(sheet.getLastRowNum() + 1);
         for (int i = 0; i < cells.length; i++) {
             Cell cell = row.createCell(i);
@@ -81,9 +69,9 @@ public class SimpleExcelWriter {
     private String generateString(Object cell) {
         if (cell instanceof Collection) {
             StringBuilder builder = new StringBuilder();
-            Collection<Object> coll = (Collection<Object>) cell;
-            for (Object s : coll) {
-                builder.append(s.toString()).append("\r\n");
+            Collection<String> coll = (Collection<String>) cell;
+            for (String s : coll) {
+                builder.append(s).append("\r\n");
             }
             return builder.toString();
         }
@@ -94,13 +82,8 @@ public class SimpleExcelWriter {
         wb.write(new FileOutputStream(outputPath));
     }
 
-    public void writeTableMap(TableListMap tableListMap) {
+    public static class ColorCell {
 
     }
-
-    public static void main(String[] args) {
-        SimpleExcelWriter simpleExcelWriter = new SimpleExcelWriter("");
-    }
-
 
 }
