@@ -14,22 +14,27 @@ import java.util.Map;
  * @author hwyang
  */
 public class DBUtile {
-    public static String URL = "192.168.10.120";
-    public static String dbName = "jjhotel";
-    public static String username = "root";
-    public static String password = "Blue_Red222";
+    public static String URL = "10.6.6.123:3306";
+    public static String dbName = "bw_hotel";
+    public static String username = "tech_nlp";
+    public static String password = "tech_nlpNVxzJN)~%C0M";
     public static Connection getConnection() {
         try {
-//            Class.forName("com.mysql.jdbc.Driver");
-//            String url = "jdbc:mysql://" + URL + "/"+dbName+"?useUnicode=true&characterEncoding=utf-8";
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            String url = "jdbc:sqlserver://" + URL + ";DatabaseName=" + dbName;
+            Class.forName("com.mysql.jdbc.Driver");
+            String url = "jdbc:mysql://" + URL + "/" + dbName + "?useUnicode=true&characterEncoding=utf-8";
+//            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+//            String url = "jdbc:sqlserver://" + URL + ";DatabaseName=" + dbName;
             Connection conn = DriverManager.getConnection(url, username, password);
             return conn;
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
 
+    }
+
+    public static void main(String[] args) {
+        Connection connection = getConnection();
+        System.out.println("success ...");
     }
     public static List<Map<String, Object>> executeQuery(String sql) {
         System.out.println("excute sql : " + sql);
