@@ -6,8 +6,10 @@ import yangUtil.YangCollectionUtil;
 import java.util.*;
 
 /**
+ * 思想：与重要词共现的词也很重要
  * S(Vi) = (1-d) + d*Sigma(j->in(vi)) 1/out(Vj) * S(Vj)
  * S(Vi)是网页i的中重要性（PR值）。d是阻尼系数，一般设置为0.85。In(Vi)是存在指向网页i的链接的网页集合。Out(Vj)是网页j中的链接存在的链接指向的网页的集合。|Out(Vj)|是集合中元素的个数。
+ * 网页的重要性取决于指向网页i的链接的网页集合且与集合大小成正比，并且与指向该网页的页面的重要性成正比，网页的连接数量成反比
  * Created by hwyang on 2015/8/24.
  */
 public class TextRank {

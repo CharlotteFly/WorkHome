@@ -6,6 +6,7 @@
 
     <groupId>com.yhw.util</groupId>
     <artifactId>util</artifactId>
+
     <packaging>jar</packaging>
     <build>
         <plugins>

@@ -56,7 +56,7 @@ public class YangStringUtil {
         return builder == null ? "" : builder.toString();
     }
 
-    static final String symbolDic = ",.!?，。？！；;．。，！？；";
+    static final String symbolDic = ",.!?，。？！；;．。， 、！？；";
 
     /**
      * 分句
