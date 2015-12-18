@@ -46,14 +46,14 @@ public class YangCollectionUtil {
         }
     }
 
-    public static <K, V> Map<K, List<V>> sortMapBySize(Map<K, List<V>> map, final boolean asc) {
+    public static <K, V> Map<K, Collection<V>> sortMapBySize(Map<K, Collection<V>> map, final boolean asc) {
         if (!(map instanceof LinkedHashMap)) {
             map = new LinkedHashMap<>(map);
         }
-        List<Map.Entry<K, List<V>>> entries = new ArrayList<>(map.entrySet());
-        Collections.sort(entries, new Comparator<Map.Entry<K, List<V>>>() {
+        List<Map.Entry<K, Collection<V>>> entries = new ArrayList<>(map.entrySet());
+        Collections.sort(entries, new Comparator<Map.Entry<K, Collection<V>>>() {
             @Override
-            public int compare(Map.Entry<K, List<V>> o1, Map.Entry<K, List<V>> o2) {
+            public int compare(Map.Entry<K, Collection<V>> o1, Map.Entry<K, Collection<V>> o2) {
                 if (asc) {
                     return o2.getValue().size() - o1.getValue().size();
                 } else {
@@ -62,7 +62,7 @@ public class YangCollectionUtil {
             }
         });
         map.clear();
-        for (Map.Entry<K, List<V>> entry : entries) {
+        for (Map.Entry<K, Collection<V>> entry : entries) {
             map.put(entry.getKey(), entry.getValue());
         }
         return map;

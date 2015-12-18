@@ -315,4 +315,13 @@ public class YangInputStringUtil {
         };
     }
 
+    public static Reader getFileReaderByClassPath(String file) throws IOException {
+        InputStream resourceAsStream = YangInputStringUtil.class.getClassLoader().getResourceAsStream(file);
+        return new InputStreamReader(resourceAsStream, "utf-8");
+    }
+
+    public static Reader getFileReaderByFilePath(String file) throws IOException {
+        return new FileReader(file);
+    }
+
 }
