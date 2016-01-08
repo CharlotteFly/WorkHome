@@ -7,10 +7,11 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import java.io.*;
 
 /**
  * Created by hwyang on 2015/2/10.
@@ -54,5 +55,63 @@ public class YangXmlUtil {
         File file = new File(filePath);
         Document document = readDocument(file);
         saveDocument(document, new FileWriter(file));
+    }
+
+    //xml转换成bean
+    public static <T> T parseToBean(String xmlstr,Class<T> clazz)  {
+        T requestXml = null;
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+            Unmarshaller um = jaxbContext.createUnmarshaller();
+            requestXml = (T)um.unmarshal(new StringReader(xmlstr));
+        } catch (JAXBException e) {
+            e.getMessage();
+        }
+        return requestXml;
+    }
+
+    //xml转换成bean
+    public static <T> T parseToBean(File file,Class<T> clazz)  {
+        T requestXml = null;
+        try {
+            Document document = readDocument(file);
+            JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+            Unmarshaller um = jaxbContext.createUnmarshaller();
+            requestXml = (T) um.unmarshal(new StringReader(document.asXML()));
+        } catch (JAXBException e) {
+            e.getMessage();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+        return requestXml;
+    }
+
+    //bean 转换成 xml
+    private static String parseToXml(Object javaBean) throws Exception{
+        StringWriter writer = new StringWriter();
+        JAXBContext context = JAXBContext.newInstance(javaBean.getClass());
+        Marshaller  marshal = context.createMarshaller();
+        marshal.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); // 格式化输出
+        marshal.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");// 编码格式,默认为utf-8
+        marshal.setProperty(Marshaller.JAXB_FRAGMENT, false);// 是否省略xml头信息
+        marshal.setProperty("jaxb.encoding", "utf-8");
+        marshal.marshal(javaBean,writer);
+        return new String(writer.getBuffer());
+    }
+
+    //bean 转换成 xml
+    public static void parseToFile(Object javaBean,File output) throws JAXBException, IOException {
+        JAXBContext context = JAXBContext.newInstance(javaBean.getClass());
+        Marshaller  marshal = context.createMarshaller();
+        marshal.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); // 格式化输出
+        marshal.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");// 编码格式,默认为utf-8
+        marshal.setProperty(Marshaller.JAXB_FRAGMENT, false);// 是否省略xml头信息
+        marshal.setProperty("jaxb.encoding", "utf-8");
+        FileWriter writer = new FileWriter(output);
+        marshal.marshal(javaBean, writer);
+    }
+
+
+    public static void main(String[] args) throws Exception {
     }
 }
