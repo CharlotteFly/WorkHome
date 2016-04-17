@@ -74,13 +74,12 @@ public class YangXmlUtil {
     public static <T> T parseToBean(File file,Class<T> clazz)  {
         T requestXml = null;
         try {
-            Document document = readDocument(file);
             JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
             Unmarshaller um = jaxbContext.createUnmarshaller();
-            requestXml = (T) um.unmarshal(new StringReader(document.asXML()));
+            requestXml = (T) um.unmarshal(new FileInputStream(file));
         } catch (JAXBException e) {
             e.getMessage();
-        } catch (DocumentException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return requestXml;
